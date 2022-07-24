@@ -1,15 +1,13 @@
-package com.works;
+package com.example;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cache.annotation.EnableCaching;
 
 @SpringBootApplication
-@EnableCaching
-public class Days6Application {
+public class Application {
 
     public static void main(String[] args) {
-        SpringApplication.run(Days6Application.class, args);
+        SpringApplication.run(Application.class, args);
     }
 
 }

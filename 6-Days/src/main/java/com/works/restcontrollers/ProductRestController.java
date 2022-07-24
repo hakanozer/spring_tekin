@@ -1,24 +1,34 @@
 package com.works.restcontrollers;
 
-import com.works.services.JoinProCatService;
+import com.works.entities.Product;
+import com.works.services.ProductService;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/product")
 public class ProductRestController {
 
-    final JoinProCatService jService;
-    public ProductRestController(JoinProCatService jService) {
-        this.jService = jService;
+
+    final ProductService pService;
+    final CacheManager cacheManager;
+    public ProductRestController(ProductService pService, CacheManager cacheManager) {
+        this.pService = pService;
+        this.cacheManager = cacheManager;
     }
 
+    @PostMapping("/save")
+    public ResponseEntity save(@RequestBody Product product) {
+        cacheManager.getCache("product").clear();
+        return pService.save(product);
+    }
+
+    @Cacheable("product")
     @GetMapping("/list")
-    public ResponseEntity list(@RequestParam(defaultValue = "") String q, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "asc") String sort) {
-        return jService.list(q, page, sort);
+    public ResponseEntity list() {
+        return pService.list();
     }
 
 
